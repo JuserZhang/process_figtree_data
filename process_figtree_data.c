@@ -8,13 +8,17 @@
 int g_len=0;
 int g_count=0;
 
+char *g_str = NULL;
+char *g_src = NULL;
+char *g_dest = NULL;
+
 //忽略空格
 char *ignor_space(char *str)
 {
-	char *dest=calloc(1,g_len);
+	char *dest=g_src;
 	char *p = str;
 	char *q=dest;
-
+	memset(g_src,'\0',g_len+1);
 	while(*p){
 		if(*p == ' '){
 			p++;
@@ -22,17 +26,19 @@ char *ignor_space(char *str)
 		}
 		*q++ = *p++;
 	}
-	free(str);
 	return dest;
 }
 
 //忽略: ,/)中间内容
 char *ignor3_str(char *str)
 {
-	char *step3_str=calloc(1,g_len);
+	char *step3_str=g_dest;
 	char *p = str;
 	char *q=step3_str;
 	int clean_char_flag=0;
+
+	memset(g_dest,'\0',g_len+1);
+
 	while(*p){
 		if(*p == ':'){
 			clean_char_flag=1;
@@ -51,17 +57,18 @@ char *ignor3_str(char *str)
 
 		*q++ = *p++;
 	}
-	free(str);
+
 	return step3_str;
 }
 
 //忽略[]内容
 char *ignor2_str(char *str)
 {
-	char *step2_str=calloc(1,g_len);
+	char *step2_str=g_src;
 	char *p = str;
 	char *q=step2_str;
 	int clean_char_flag=0;
+	memset(g_src,'\0',g_len+1);
 	while(*p){
 		if(*p == '['){
 			clean_char_flag=1;
@@ -80,17 +87,17 @@ char *ignor2_str(char *str)
 
 		*q++ = *p++;
 	}
-	free(str);
 	return step2_str;
 }
 
 //忽略{}内容
 char *ignor1_str(char *str)
 {
-	char *step1_str=calloc(1,g_len);
+	char *step1_str = g_str;
 	char *p = str;
 	char *q=step1_str;
 	int clean_char_flag=0;
+	memset(g_str,'\0',g_len+1);
 	while(*p){
 		if(*p == '{'){
 			clean_char_flag=1;
@@ -109,7 +116,6 @@ char *ignor1_str(char *str)
 
 		*q++ = *p++;
 	}
-	free(str);
 	return step1_str;
 }
 
@@ -190,12 +196,17 @@ char* read_file(char * path, int *length)
 /*获取叶子对*/
 int get_leaf(char *src, FILE* save_tmp)
 {
-	char *p_rear = src;
-	char *p_front = src;
+	char *p_rear = NULL;
+	char *p_front = NULL;
 	char tmp[MAX_LEN]={'\0'};
 	char *q_tmp = tmp;
 	int num = 0;
 	int record_flag = 0;
+
+	memset(g_dest,'\0',g_len+1);
+	memcpy(g_dest,src,g_len+1);
+	p_rear = g_dest;
+	p_front = g_dest;
 
 	while (*p_front){
 		if(*p_front == '('){
@@ -275,6 +286,16 @@ int main(int argc,char **argv)
 	}
 
 	txt = read_file(file,&g_len);
+
+	g_str = malloc(sizeof(char)*g_len +1);
+	g_src = malloc(sizeof(char)*g_len +1);
+	g_dest = malloc(sizeof(char)*g_len +1);
+	
+	if(!g_str || !g_src || !g_dest){
+		printf("malloc failed!\n");
+		exit(-1);
+	}
+
 	//printf("len:[%d] txt: %s\n",g_len,txt);
 
 	/*格式化文本*/
@@ -295,7 +316,7 @@ int main(int argc,char **argv)
 		}
 		//从端点获取信息对
 		num = get_leaf(dest,save_tmp);
-		dest = ignor_space(dest);
+		dest = ignor_space(g_dest);
 		g_count+=num;
 	}
 	printf("There are %d scenarios\n",g_count);
