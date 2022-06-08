@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/root/build/process_figtree_data'
+gcc process_figtree_data.c -c -Wall -g -o process_figtree_data.o
+gcc process_figtree_data.c -o process_figtree_data
+make: Leaving directory '/root/build/process_figtree_data'
+ 

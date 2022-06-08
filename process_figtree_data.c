@@ -8,37 +8,6 @@
 int g_len=0;
 int g_count=0;
 
-//字符串格式化
-//将"awerv ((((a,b),c),d),(e,f)))addf[o]df" 去掉首尾不向相关字符
-char* format_str(char *str)
-{
-	char *dest = calloc(1,strlen(str)+1);
-	char *p = str;
-	char *q = dest;
-	int l_num = 0;
-	int r_num = 0;
-	
-	while(*p!='(')
-		p++;
-
-	while(*p){
-		if(*p == '('){
-			l_num++;
-		}
-		if(*p == ')'){
-			r_num++;
-		}
-		if(l_num == r_num){
-			*q++=*p++;	
-			break;
-		}
-
-		*q++=*p++;	
-	}
-	*q = '\0';
-	return dest;
-}
-
 //忽略空格
 char *ignor_space(char *str)
 {
@@ -242,7 +211,7 @@ int get_leaf(char *src, FILE* save_tmp)
 				if(*p_rear == '('){
 					*p_rear = ' ';
 				}else if( *p_rear == ','){
-					*p_rear = ' ';
+					*p_rear = '+';
 				}
 				q_tmp++;
 				p_rear++;
@@ -253,8 +222,8 @@ int get_leaf(char *src, FILE* save_tmp)
 			}
 			q_tmp++;
 			p_rear++;
-			fputs(tmp, save_tmp); //将目前的检测文件和目录数量写入第一行
-			fputc('\n', save_tmp); //写入换行符
+			fputs(tmp, save_tmp); 
+			fputc('\n', save_tmp); 
 			num++;
 		}
 		p_front++;
