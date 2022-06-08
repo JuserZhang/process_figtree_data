@@ -259,6 +259,15 @@ int main(int argc,char **argv)
 	FILE *save_tmp = NULL;
 	FILE *save_result = NULL;
 
+	if(argc != 3){
+		printf("argc is err!\n");
+		printf("Usage:%s xxxx.tree save.txt\n",argv[0]);
+		exit(0);
+	}
+	if(!save_result_file){
+		printf("savefile is null\n");
+		exit(-1);
+	}
 	save_tmp = open_file_write(SAVE_TMP_FILE);
 	if(!save_tmp){
 		printf("open %s failed.",SAVE_TMP_FILE);
@@ -303,8 +312,7 @@ int main(int argc,char **argv)
 
 	line = calloc(1,g_len);
 
-	while (!feof(save_tmp))
-	{
+	while (!feof(save_tmp)){
 		memset(line,'\0',g_len);
 		fgets(line,g_len,save_tmp);
 
