@@ -3,7 +3,7 @@
 #include<string.h>
 
 #define SAVE_TMP_FILE "./.save_tmp.txt"
-#define RESULT_FILE "./result.txt"
+//#define RESULT_FILE "./result.txt"
 #define MAX_LEN 8192
 int g_len=0;
 int g_count=0;
@@ -247,6 +247,7 @@ int is_left_pair(char *dest)
 int main(int argc,char **argv)
 {
 	char *file = argv[1];
+	char *save_result_file = argv[2];
 	char *txt = NULL;
 	char *step1_str = NULL;
 	char *step2_str = NULL;
@@ -294,9 +295,9 @@ int main(int argc,char **argv)
 
 	//将保存的文件逐行提取格式化输出
 	save_tmp = open_file_read(SAVE_TMP_FILE);
-	save_result = open_file_write(RESULT_FILE);
+	save_result = open_file_write(save_result_file);
 	if(!save_result){
-		printf("open %s failed.",RESULT_FILE);
+		printf("open %s failed.",save_result_file);
 		exit(-1);
 	}
 
@@ -315,6 +316,6 @@ int main(int argc,char **argv)
 
 	close_file(save_tmp);
 	close_file(save_result);
-	printf("Result save to file:%s\n",RESULT_FILE);
+	printf("Result save to file:%s\n",save_result_file);
 	return 0;
 }
