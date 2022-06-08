@@ -1,0 +1,4 @@
+处理figtee数据
+
+使用举例：
+./process_figtree_data 树文件.txt
