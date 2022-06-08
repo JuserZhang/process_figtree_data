@@ -264,7 +264,7 @@ int main(int argc,char **argv)
 	char *step2_str = NULL;
 	char *step3_str = NULL;
 	char *dest = NULL;
-	char *line = NULL;
+	char line[MAX_LEN] = {0};
 	int num = 0;
 
 	FILE *save_tmp = NULL;
@@ -308,8 +308,6 @@ int main(int argc,char **argv)
 	dest = ignor_space(step3_str);
 	//printf("step4_str: %s\n",dest);
 
-
-
 	while(1){
 		if(is_left_pair(dest) == 0){
 			break;
@@ -322,7 +320,21 @@ int main(int argc,char **argv)
 	printf("There are %d scenarios\n",g_count);
 	close_file(save_tmp);
 
+	if(g_dest){
+		free(g_dest);
+		g_dest = NULL;
+	}
 
+	if(g_src){
+		free(g_src);
+		g_src = NULL;
+	}
+
+	if(g_str){
+		free(g_str);
+		g_str = NULL;
+	}
+	
 	//将保存的文件逐行提取格式化输出
 	save_tmp = open_file_read(SAVE_TMP_FILE);
 	save_result = open_file_write(save_result_file);
@@ -331,11 +343,9 @@ int main(int argc,char **argv)
 		exit(-1);
 	}
 
-	line = calloc(1,g_len);
-
 	while (!feof(save_tmp)){
-		memset(line,'\0',g_len);
-		fgets(line,g_len,save_tmp);
+		memset(line,'\0',MAX_LEN);
+		fgets(line,MAX_LEN,save_tmp);
 
 		if(strlen(line) == 0)
 			continue;
